@@ -1,6 +1,6 @@
 import { Model, model, models, Schema } from 'mongoose'
 
-const ModelName = 'MachineHistory'
+const ModelName = 'Machine'
 
 export enum MachineStatus {
   ACTIVE = 'active',

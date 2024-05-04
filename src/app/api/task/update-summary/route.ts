@@ -62,7 +62,7 @@ export const GET = async (req: Request) => {
   })
 
   const result: Array<z.infer<typeof schema>> = []
-  const machinesMap = new Map<number, Types.ObjectId | null>()
+  const machinesMap = new Map<number, string>()
 
   for (const [, value] of rows) {
     const [
@@ -101,15 +101,16 @@ export const GET = async (req: Request) => {
       )
     }
 
+    // console.log(machinesMap)
+
     if (!machinesMap.has(parsed.data.machine_no)) {
-      const machine = await Machine.findOne(
+      const machine = await Machine.findOneAndUpdate(
         { machine_no: parsed.data.machine_no },
-        { _id: 1 },
+        { machine_no: parsed.data.machine_no },
+        { upsert: true, new: true },
       )
-      machinesMap.set(parsed.data.machine_no, machine?._id ?? null)
-    } else {
-      const machine = await Machine.create({ machine_no: machineNo })
-      machinesMap.set(parsed.data.machine_no, machine._id)
+
+      machinesMap.set(parsed.data.machine_no, machine?.id ?? null)
     }
 
     result.push(parsed.data)
@@ -119,22 +120,27 @@ export const GET = async (req: Request) => {
 
   try {
     await MachineHistory.bulkWrite(
-      reversed.map((data, index) => ({
-        updateOne: {
-          filter: {
-            no: index + 1,
-            machine: machinesMap.get(data.machine_no),
-            start_at: data.start_at,
-          },
-          update: {
-            $set: {
-              ...data,
-              machine: machinesMap.get(data.machine_no),
+      reversed.map(({ machine_no, ...data }, index) => {
+        const machineId = new Types.ObjectId(machinesMap.get(machine_no))
+
+        return {
+          updateOne: {
+            filter: {
+              no: index + 1,
+              machine: machineId,
+              start_at: data.start_at,
             },
+            update: {
+              $set: {
+                ...data,
+                no: index + 1,
+                machine: machineId,
+              },
+            },
+            upsert: true,
           },
-          upsert: true,
-        },
-      })),
+        }
+      }),
     )
   } catch (error) {
     console.error(error)
