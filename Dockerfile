@@ -14,6 +14,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG NEXT_PUBLIC_URL
+ENV NEXT_PUBLIC_URL $NEXT_PUBLIC_URL
+
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN corepack enable pnpm && pnpm run build
 
