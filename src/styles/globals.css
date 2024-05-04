@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+@import 'fonts';
+
+@theme {
+  --font-family-sans: 'Mi Sans', sans-serif;
+}
