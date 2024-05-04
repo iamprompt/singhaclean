@@ -7,6 +7,8 @@ import { Machine, MachineHistory } from '@/db/models'
 import { IWasherInstance } from '@/lib/axios'
 import dayjs from '@/lib/dayjs'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   machine_no: z.coerce.number().int(),
   price: z.coerce.number().int(),

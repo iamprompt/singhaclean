@@ -5,6 +5,8 @@ import { IWASHER_BASE_URL, SummaryExportHeaders } from '@/const/iwasher'
 import dayjs from '@/lib/dayjs'
 import { serialDateTimeToISOString } from '@/lib/excel'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   [SummaryExportHeaders.NO]: z.number().int(),
   [SummaryExportHeaders.USERNAME]: z.string(),

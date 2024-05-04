@@ -1,5 +1,7 @@
 import { MachineHistory } from '@/db/models'
 
+export const dynamic = 'force-dynamic'
+
 export const GET = async (req: Request) => {
   const data = await MachineHistory.aggregate([
     { $group: { _id: '$machine', count: { $sum: 1 } } },
