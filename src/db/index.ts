@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { NextRequest } from 'next/server'
+import { z } from 'zod'
 
 import { AppError } from '@/modules/api/appError'
 
@@ -59,6 +60,13 @@ export const withDB =
         return Response.json(
           { message: error.message },
           { status: error.statusCode },
+        )
+      }
+
+      if (error instanceof z.ZodError) {
+        return Response.json(
+          { message: error.errors[0].message },
+          { status: 400 },
         )
       }
 
