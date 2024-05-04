@@ -4,7 +4,7 @@ const ModelName = 'MachineHistory'
 
 export interface IMachineHistory {
   no: number
-  machine_no: string
+  machine: Schema.Types.ObjectId
   price: number
   banknotes: number
   coins: number
@@ -20,7 +20,7 @@ export interface IMachineHistory {
 const MachineHistorySchema = new Schema<IMachineHistory>(
   {
     no: { type: Number, required: true },
-    machine_no: { type: String, required: true },
+    machine: { type: Schema.Types.ObjectId, ref: 'machines', required: true },
     price: { type: Number, required: true },
     banknotes: { type: Number, required: true },
     coins: { type: Number, required: true },

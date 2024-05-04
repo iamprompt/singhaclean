@@ -1,8 +1,9 @@
 import { load } from 'cheerio'
+import { Types } from 'mongoose'
 import { z } from 'zod'
 
 import connectMongo from '@/db'
-import { MachineHistory } from '@/db/models'
+import { Machine, MachineHistory } from '@/db/models'
 import { IWasherInstance } from '@/lib/axios'
 import dayjs from '@/lib/dayjs'
 
@@ -61,6 +62,7 @@ export const GET = async (req: Request) => {
   })
 
   const result: Array<z.infer<typeof schema>> = []
+  const machinesMap = new Map<number, Types.ObjectId | null>()
 
   for (const [, value] of rows) {
     const [
@@ -99,6 +101,17 @@ export const GET = async (req: Request) => {
       )
     }
 
+    if (!machinesMap.has(parsed.data.machine_no)) {
+      const machine = await Machine.findOne(
+        { machine_no: parsed.data.machine_no },
+        { _id: 1 },
+      )
+      machinesMap.set(parsed.data.machine_no, machine?._id ?? null)
+    } else {
+      const machine = await Machine.create({ machine_no: machineNo })
+      machinesMap.set(parsed.data.machine_no, machine._id)
+    }
+
     result.push(parsed.data)
   }
 
@@ -110,10 +123,15 @@ export const GET = async (req: Request) => {
         updateOne: {
           filter: {
             no: index + 1,
-            machine_no: data.machine_no,
+            machine: machinesMap.get(data.machine_no),
             start_at: data.start_at,
           },
-          update: { $set: data },
+          update: {
+            $set: {
+              ...data,
+              machine: machinesMap.get(data.machine_no),
+            },
+          },
           upsert: true,
         },
       })),
