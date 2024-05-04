@@ -2,7 +2,7 @@ import { load } from 'cheerio'
 import { Types } from 'mongoose'
 import { z } from 'zod'
 
-import connectMongo from '@/db'
+import { withDB } from '@/db'
 import { Machine, MachineHistory } from '@/db/models'
 import { IWasherInstance } from '@/lib/axios'
 import dayjs from '@/lib/dayjs'
@@ -28,17 +28,7 @@ const schema = z.object({
   status: z.string(),
 })
 
-export const GET = async (req: Request) => {
-  try {
-    await connectMongo()
-  } catch (error) {
-    console.error(error)
-    return Response.json(
-      { error: 'Failed to connect to the database' },
-      { status: 500 },
-    )
-  }
-
+export const GET = withDB(async (req) => {
   const { data } = await IWasherInstance.get('/bill_show04.php', {
     params: {
       fr_date: '2022-07-01',
@@ -103,8 +93,6 @@ export const GET = async (req: Request) => {
       )
     }
 
-    // console.log(machinesMap)
-
     if (!machinesMap.has(parsed.data.machine_no)) {
       const machine = await Machine.findOneAndUpdate(
         { machine_no: parsed.data.machine_no },
@@ -153,4 +141,4 @@ export const GET = async (req: Request) => {
   }
 
   return Response.json({ data: result })
-}
+})
