@@ -1,6 +1,7 @@
 import { withDB } from '@/db'
 import { MachineHistory } from '@/db/models'
 import { MachineHistoryLogPipeline } from '@/db/pipelines'
+import { withAuth } from '@/modules/api/withAuth'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,10 +17,12 @@ type MachineStats = {
   logs: Array<{ code: string; count: number }>
 }
 
-export const GET = withDB(async () => {
-  const data = await MachineHistory.aggregate<MachineStats>(
-    MachineHistoryLogPipeline({ groupBy: 'year' }),
-  )
+export const GET = withDB(
+  withAuth(async () => {
+    const data = await MachineHistory.aggregate<MachineStats>(
+      MachineHistoryLogPipeline({ groupBy: 'year' }),
+    )
 
-  return Response.json(data)
-})
+    return Response.json(data)
+  }),
+)

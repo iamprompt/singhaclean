@@ -1,5 +1,6 @@
 import { withDB } from '@/db'
 import { MachineHistory } from '@/db/models'
+import { withAuth } from '@/modules/api/withAuth'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,73 +16,75 @@ type MachineStats = {
   logs: Array<{ code: string; count: number }>
 }
 
-export const GET = withDB(async () => {
-  const data = await MachineHistory.aggregate<MachineStats>([
-    {
-      $group: {
-        _id: { machine_id: '$machine', code: '$status' },
-        count: { $sum: 1 },
-      },
-    },
-    {
-      $lookup: {
-        from: 'machines',
-        localField: '_id.machine_id',
-        foreignField: '_id',
-        as: 'machine',
-      },
-    },
-    { $unwind: { path: '$machine', preserveNullAndEmptyArrays: true } },
-    {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: ['$machine', { count: '$count', code: '$_id.code' }],
+export const GET = withDB(
+  withAuth(async () => {
+    const data = await MachineHistory.aggregate<MachineStats>([
+      {
+        $group: {
+          _id: { machine_id: '$machine', code: '$status' },
+          count: { $sum: 1 },
         },
       },
-    },
-    { $sort: { code: 1 } },
-    {
-      $group: {
-        _id: '$_id',
-        root: { $first: '$$ROOT' },
-        success: {
-          $sum: {
-            $cond: [
-              { $regexMatch: { input: '$code', regex: /^OK/ } },
-              '$count',
-              0,
-            ],
-          },
+      {
+        $lookup: {
+          from: 'machines',
+          localField: '_id.machine_id',
+          foreignField: '_id',
+          as: 'machine',
         },
-        error: {
-          $sum: {
-            $cond: [
-              { $regexMatch: { input: '$code', regex: /^ER/ } },
-              '$count',
-              0,
-            ],
-          },
-        },
-        total: { $sum: '$count' },
-        logs: { $push: { code: '$code', count: '$count' } },
       },
-    },
-    {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: {
-            id: '$_id',
-            machine_no: '$root.machine_no',
-            type: '$root.type',
-            status: '$root.status',
-            stats: { success: '$success', error: '$error', total: '$total' },
-            logs: '$logs',
+      { $unwind: { path: '$machine', preserveNullAndEmptyArrays: true } },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ['$machine', { count: '$count', code: '$_id.code' }],
           },
         },
       },
-    },
-    { $sort: { machine_no: 1 } },
-  ])
+      { $sort: { code: 1 } },
+      {
+        $group: {
+          _id: '$_id',
+          root: { $first: '$$ROOT' },
+          success: {
+            $sum: {
+              $cond: [
+                { $regexMatch: { input: '$code', regex: /^OK/ } },
+                '$count',
+                0,
+              ],
+            },
+          },
+          error: {
+            $sum: {
+              $cond: [
+                { $regexMatch: { input: '$code', regex: /^ER/ } },
+                '$count',
+                0,
+              ],
+            },
+          },
+          total: { $sum: '$count' },
+          logs: { $push: { code: '$code', count: '$count' } },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: {
+              id: '$_id',
+              machine_no: '$root.machine_no',
+              type: '$root.type',
+              status: '$root.status',
+              stats: { success: '$success', error: '$error', total: '$total' },
+              logs: '$logs',
+            },
+          },
+        },
+      },
+      { $sort: { machine_no: 1 } },
+    ])
 
-  return Response.json(data)
-})
+    return Response.json(data)
+  }),
+)
