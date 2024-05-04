@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import { NextRequest } from 'next/server'
 
+import { AppError } from '@/modules/api/appError'
+
 const MONGO_URI = process.env.MONGO_URI
 const cached: {
   connection?: typeof mongoose
@@ -32,8 +34,13 @@ async function connectMongo() {
 }
 
 export const withDB =
-  (handler: (req: NextRequest) => Promise<Response> | Response) =>
-  async (req: NextRequest) => {
+  (
+    handler: (
+      req: NextRequest,
+      options: Record<string, any>,
+    ) => Promise<Response> | Response,
+  ) =>
+  async (req: NextRequest, options: Record<string, any> = {}) => {
     try {
       await connectMongo()
     } catch (error) {
@@ -45,9 +52,16 @@ export const withDB =
     }
 
     try {
-      return handler(req)
+      return await handler(req, options)
     } catch (error) {
       console.error(error)
+      if (error instanceof AppError) {
+        return Response.json(
+          { message: error.message },
+          { status: error.statusCode },
+        )
+      }
+
       return Response.json(
         { error: 'An error occurred while processing the request' },
         { status: 500 },
