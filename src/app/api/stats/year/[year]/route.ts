@@ -28,7 +28,7 @@ export const GET = withDB(
       throw new AppError(400, 'Invalid date')
     }
 
-    const data = await MachineHistory.aggregate<MachineStats>(
+    const [data] = await MachineHistory.aggregate<MachineStats>(
       MachineHistoryLogPipeline({
         groupBy: 'year',
         startDate: date.startOf('year').toDate(),

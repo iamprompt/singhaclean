@@ -28,7 +28,7 @@ export const GET = withDB(
       throw new AppError(400, 'Invalid month format')
     }
 
-    const data = await MachineHistory.aggregate<MachineStats>(
+    const [data] = await MachineHistory.aggregate<MachineStats>(
       MachineHistoryLogPipeline({
         groupBy: 'month',
         startDate: date.startOf('month').toDate(),
