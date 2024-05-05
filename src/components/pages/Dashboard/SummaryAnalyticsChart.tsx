@@ -74,7 +74,7 @@ export const SummaryAnalyticsChart = ({
     }>
   >(() => {
     return (
-      data?.slice(0, 10).map((item: any) => ({
+      data?.slice(0, 7).map((item: any) => ({
         date: item.day,
         washer: item.stats.washer || 0,
         dryer: item.stats.dryer || 0,
@@ -103,7 +103,7 @@ export const SummaryAnalyticsChart = ({
     <Card className={className} {...props}>
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
-          <CardTitle>สถิติการทำงาน</CardTitle>
+          <CardTitle>สถิติการทำงาน 7 วันล่าสุด</CardTitle>
           <CardDescription>
             ยอดการใช้งานเครื่องซักผ้าและเครื่องอบผ้า
           </CardDescription>
