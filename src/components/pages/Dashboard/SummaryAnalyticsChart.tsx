@@ -1,7 +1,5 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { ComponentProps, useMemo } from 'react'
@@ -23,6 +21,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useGetDailyStats } from '@/hooks/stats'
 import { formatDate } from '@/lib/utils'
 
 type SummaryAnalyticsChartProps = {} & ComponentProps<typeof Card>
@@ -64,18 +64,7 @@ export const SummaryAnalyticsChart = ({
   className,
   ...props
 }: SummaryAnalyticsChartProps) => {
-  const { data } = useQuery({
-    queryKey: ['daily-stats'],
-    queryFn: async () => {
-      const { data, status } = await axios.get('/api/stats/day')
-
-      if (status !== 200) {
-        throw new Error('Failed to fetch daily stats')
-      }
-
-      return data
-    },
-  })
+  const { data, isLoading } = useGetDailyStats()
 
   const formatData = useMemo<
     Array<{
@@ -93,7 +82,22 @@ export const SummaryAnalyticsChart = ({
     ).reverse()
   }, [data])
 
-  console.log('formatData', formatData)
+  if (isLoading) {
+    return (
+      <Card className={className} {...props}>
+        <CardHeader className="flex flex-row items-center">
+          <div className="grid gap-2">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-5 w-52" />
+          </div>
+          <Skeleton className="ml-auto h-9 w-20" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-[280px] w-full" />
+        </CardContent>
+      </Card>
+    )
+  }
 
   return (
     <Card className={className} {...props}>
