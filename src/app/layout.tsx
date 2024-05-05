@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
 
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { ReactNode } from 'react'
 
 import { Providers } from './providers'
@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+}
+
+export const viewport: Viewport = {
+  userScalable: false,
+  initialScale: 1,
 }
 
 function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
