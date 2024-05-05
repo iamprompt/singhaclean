@@ -1,16 +1,8 @@
 import { Model, model, models, Schema } from 'mongoose'
 
+import { MachineStatus, MachineType } from '@/const/machine'
+
 const ModelName = 'Machine'
-
-export enum MachineStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-}
-
-export enum MachineType {
-  WASHER = 'washer',
-  DRYER = 'dryer',
-}
 
 export interface IMachine {
   machine_no: number

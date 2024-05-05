@@ -77,6 +77,8 @@ export const MachineHistoryLogPipeline = ({
               banknotes: 0,
               coins: 0,
               total_payment: 0,
+              dryer: 0,
+              washer: 0,
             },
             in: {
               success: {
@@ -110,6 +112,18 @@ export const MachineHistoryLogPipeline = ({
               total_payment: {
                 $add: ['$$value.total_payment', '$$this.total'],
               },
+              dryer: {
+                $add: [
+                  '$$value.dryer',
+                  { $cond: [{ $eq: ['$$this.machine.type', 'dryer'] }, 1, 0] },
+                ],
+              },
+              washer: {
+                $add: [
+                  '$$value.washer',
+                  { $cond: [{ $eq: ['$$this.machine.type', 'washer'] }, 1, 0] },
+                ],
+              },
             },
           },
         },
@@ -124,6 +138,8 @@ export const MachineHistoryLogPipeline = ({
           success: '$meta.success',
           error: '$meta.error',
           total: '$meta.total',
+          washer: '$meta.washer',
+          dryer: '$meta.dryer',
         },
         payment: {
           qr: '$meta.qr',
