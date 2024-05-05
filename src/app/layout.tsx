@@ -5,6 +5,10 @@ import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: 'Singhaclean Dashboard',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
