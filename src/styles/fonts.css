@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'Mi Sans';
-  src: url(../assets/fonts/MiSansThai-Bold.woff2) format('woff2');
+  src: url(../assets/fonts/MiSansThai-Semibold.woff2) format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: 'Mi Sans';
-  src: url(../assets/fonts/MiSansLatin-Bold.woff2) format('woff2');
+  src: url(../assets/fonts/MiSansLatin-Semibold.woff2) format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
