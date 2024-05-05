@@ -146,6 +146,7 @@ export const MachineHistoryLogPipeline = ({
                     {
                       id: '$$this._id',
                       machine_no: '$$this.machine.machine_no',
+                      machine_type: '$$this.machine.type',
                       qr: '$$this.qr',
                       banknotes: '$$this.banknotes',
                       coins: '$$this.coins',
