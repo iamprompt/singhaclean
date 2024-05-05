@@ -13,6 +13,11 @@ export const signInWithEmailAndPassword = async (
   return data
 }
 
+export const logout = async () => {
+  const { data } = await axios.get('/api/auth/logout')
+  return data
+}
+
 export const getMe = async () => {
   try {
     const data = await serverFetch('/api/auth/me')
