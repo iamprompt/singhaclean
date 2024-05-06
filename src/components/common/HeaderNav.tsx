@@ -2,7 +2,8 @@
 
 import { CircleUser, Menu, WashingMachine } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useMemo } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -12,7 +13,36 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { NavItems } from '@/const/nav'
+import { cn } from '@/lib/utils'
 import { logout } from '@/modules/auth'
+
+type HeaderItemProps = {
+  href: string
+  label: string
+  exact?: boolean
+}
+
+const HeaderItem = ({ href, label, exact }: HeaderItemProps) => {
+  const pathname = usePathname()
+
+  const isActive = useMemo(() => {
+    if (exact) return pathname === href
+    return pathname.startsWith(href)
+  }, [pathname, href, exact])
+
+  return (
+    <Link
+      href={href}
+      className={cn(
+        'text-muted-foreground transition-colors hover:text-foreground',
+        isActive && 'text-foreground font-bold',
+      )}
+    >
+      {label}
+    </Link>
+  )
+}
 
 export const HeaderNav = () => {
   const { replace } = useRouter()
@@ -27,36 +57,9 @@ export const HeaderNav = () => {
           <WashingMachine className="h-6 w-6" />
           <span className="sr-only">สิงห์คลีน: ร้านสะดวกซัก</span>
         </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Dashboard
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Orders
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Products
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Customers
-        </Link>
-        <Link
-          href="#"
-          className="text-foreground transition-colors hover:text-foreground"
-        >
-          Settings
-        </Link>
+        {NavItems.map((item) => (
+          <HeaderItem key={`desktop-nav-${item.id}`} {...item} />
+        ))}
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -74,33 +77,9 @@ export const HeaderNav = () => {
               <WashingMachine className="h-6 w-6" />
               <span className="sr-only">สิงห์คลีน: ร้านสะดวกซัก</span>
             </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Customers
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Settings
-            </Link>
+            {NavItems.map((item) => (
+              <HeaderItem key={`mobile-nav-${item.id}`} {...item} />
+            ))}
           </nav>
         </SheetContent>
       </Sheet>
