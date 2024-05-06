@@ -1,7 +1,7 @@
 export const NavItems = [
   {
     id: 'dashboard',
-    label: 'Dashboard',
+    label: 'แดชบอร์ด',
     href: '/',
     exact: true,
   },
