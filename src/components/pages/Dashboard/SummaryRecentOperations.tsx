@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { MachineType } from '@/const/machine'
 import { useGetSummaryStats } from '@/hooks/stats'
-import { formatDate, formatNumber } from '@/lib/utils'
+import { cn, formatDate, formatNumber } from '@/lib/utils'
 
 type SummaryRecentOperationsProps = ComponentProps<typeof Card>
 
@@ -57,7 +57,13 @@ export const SummaryRecentOperations = ({
 
           return (
             <div key={i} className="flex items-center gap-4">
-              <div className="hidden h-9 w-9 sm:flex items-center justify-center bg-slate-100 p-2 rounded-full">
+              <div
+                className={cn(
+                  'hidden h-9 w-9 sm:flex items-center justify-center bg-slate-100 p-2 rounded-full',
+                  item.status.startsWith('OK') && 'bg-green-100',
+                  item.status.startsWith('ER') && 'bg-red-100',
+                )}
+              >
                 <Icon />
               </div>
               <div className="grid gap-1">
