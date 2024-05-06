@@ -116,7 +116,7 @@ export const GET = withDB(async (req) => {
         return {
           updateOne: {
             filter: {
-              no: index + 1,
+              // no: index + 1,
               machine: machineId,
               start_at: data.start_at,
             },
