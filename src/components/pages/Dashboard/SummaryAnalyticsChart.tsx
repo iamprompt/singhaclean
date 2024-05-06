@@ -27,39 +27,6 @@ import { formatDate } from '@/lib/utils'
 
 type SummaryAnalyticsChartProps = {} & ComponentProps<typeof Card>
 
-const data = [
-  {
-    date: '2021-09-01',
-    dryer: 10,
-    washer: 20,
-  },
-  {
-    date: '2021-09-02',
-    dryer: 10,
-    washer: 20,
-  },
-  {
-    date: '2021-09-03',
-    dryer: 10,
-    washer: 20,
-  },
-  {
-    date: '2021-09-04',
-    dryer: 10,
-    washer: 20,
-  },
-  {
-    date: '2021-09-05',
-    dryer: 10,
-    washer: 20,
-  },
-  {
-    date: '2021-09-06',
-    dryer: 10,
-    washer: 20,
-  },
-]
-
 export const SummaryAnalyticsChart = ({
   className,
   ...props
