@@ -5,4 +5,9 @@ export const NavItems = [
     href: '/',
     exact: true,
   },
+  // {
+  //   id: 'stats',
+  //   label: 'ประวัติ',
+  //   href: '/history',
+  // },
 ]
