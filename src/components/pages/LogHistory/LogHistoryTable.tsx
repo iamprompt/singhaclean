@@ -5,9 +5,12 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  OnChangeFn,
+  PaginationState,
   useReactTable,
 } from '@tanstack/react-table'
 
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -17,20 +20,32 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-interface DataTableProps<TData, TValue> {
+interface LogHistoryTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  setPaginationState: OnChangeFn<PaginationState>
+  pagination: PaginationState
+  totalPages: number
 }
 
-export function DataTable<TData, TValue>({
+export function LogHistoryTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  setPaginationState,
+  pagination,
+  totalPages,
+}: LogHistoryTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    onPaginationChange: setPaginationState,
+    pageCount: totalPages,
+    state: {
+      pagination,
+    },
   })
 
   return (
@@ -67,7 +82,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="text-center">
+                    <TableCell key={cell.id} className="text-center border-x">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -85,6 +100,20 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+      </div>
+      <div>
+        <Button
+          disabled={!table.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          disabled={!table.getCanNextPage()}
+          onClick={() => table.nextPage()}
+        >
+          Next
+        </Button>
       </div>
     </div>
   )

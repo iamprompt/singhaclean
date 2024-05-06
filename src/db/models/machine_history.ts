@@ -1,4 +1,5 @@
-import { model, models, Schema } from 'mongoose'
+import { AggregatePaginateModel, model, models, Schema } from 'mongoose'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 const ModelName = 'MachineHistory'
 
@@ -47,5 +48,10 @@ const MachineHistorySchema = new Schema<IMachineHistory>(
   },
 )
 
-export const MachineHistory =
-  models[ModelName] || model(ModelName, MachineHistorySchema)
+MachineHistorySchema.plugin(aggregatePaginate)
+
+export const MachineHistory = (models[ModelName] ||
+  model(
+    ModelName,
+    MachineHistorySchema,
+  )) as AggregatePaginateModel<IMachineHistory>

@@ -73,22 +73,29 @@ export const columns: ColumnDef<MachineLog>[] = [
         accessorKey: 'start_at',
         header: 'เริ่ม',
         cell: (cell) => {
-          return formatDate(cell.getValue(), 'DD/MM/BB HH:mm น.')
+          const date = cell.getValue()
+          return date ? formatDate(cell.getValue(), 'DD/MM/BB HH:mm น.') : '-'
         },
       },
       {
         accessorKey: 'finish_at',
         header: 'เสร็จสิ้น',
         cell: (cell) => {
-          return formatDate(cell.getValue(), 'DD/MM/BB HH:mm น.')
+          const date = cell.getValue()
+          return date ? formatDate(cell.getValue(), 'DD/MM/BB HH:mm น.') : '-'
         },
       },
       {
         accessorKey: 'duration',
         header: 'ระยะเวลา',
         cell: (cell) => {
+          const duration = cell.getValue()
+          if (duration === 0) {
+            return '-'
+          }
+
           return dayjs
-            .duration(cell.getValue(), 'minutes')
+            .duration(duration, 'minutes')
             .toJSON()
             .replace('PT', '')
             .split(/(\d+)/)

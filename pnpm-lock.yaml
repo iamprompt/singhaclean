@@ -71,6 +71,9 @@ importers:
       mongoose:
         specifier: ^8.3.3
         version: 8.3.3
+      mongoose-aggregate-paginate-v2:
+        specifier: ^1.0.7
+        version: 1.0.7
       next:
         specifier: 14.2.3
         version: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -99,6 +102,9 @@ importers:
         specifier: ^3.23.6
         version: 3.23.6
     devDependencies:
+      '@types/mongoose-aggregate-paginate-v2':
+        specifier: ^1.0.12
+        version: 1.0.12
       '@types/node':
         specifier: ^20.12.8
         version: 20.12.8
@@ -988,6 +994,9 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+
+  '@types/mongoose-aggregate-paginate-v2@1.0.12':
+    resolution: {integrity: sha512-wL8pgJQxqJagv5f5mR7aI8WgUu22nS6rVLoJm71W2Uu+iKfS8jgph2rRLfXrjo+dFt1s7ik5Zl+uGZ4f5GM6Vw==}
 
   '@types/node@20.12.8':
     resolution: {integrity: sha512-NU0rJLJnshZWdE/097cdCBbyW1h4hEg0xpovcoAQYHl8dnEyp/NAOiE45pvc+Bd1Dt+2r94v2eGFpQJ4R7g+2w==}
@@ -2150,6 +2159,10 @@ packages:
         optional: true
       socks:
         optional: true
+
+  mongoose-aggregate-paginate-v2@1.0.7:
+    resolution: {integrity: sha512-Xij2wux3xs9yfXhV9d7M1P92WJsz39fyNJWyVAcSDhVO4HZnoM2zz03b2ZLCT13ha5TJL9uPM+jw1Sj2IqjHAQ==}
+    engines: {node: '>=4.0.0'}
 
   mongoose@8.3.3:
     resolution: {integrity: sha512-3kSk0db9DM2tLttCdS6WNRqewPleamFEa4Vz/Qldc0dB4Zow/FiZxb9GExHTJjBZQ9T2xiGleQ3GzRrES3hhsA==}
@@ -3592,6 +3605,20 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/mongoose-aggregate-paginate-v2@1.0.12':
+    dependencies:
+      '@types/node': 20.12.8
+      mongoose: 8.3.3
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - snappy
+      - socks
+      - supports-color
+
   '@types/node@20.12.8':
     dependencies:
       undici-types: 5.26.5
@@ -4959,6 +4986,8 @@ snapshots:
       '@mongodb-js/saslprep': 1.1.6
       bson: 6.7.0
       mongodb-connection-string-url: 3.0.0
+
+  mongoose-aggregate-paginate-v2@1.0.7: {}
 
   mongoose@8.3.3:
     dependencies:
