@@ -3,6 +3,7 @@ import { Lucia } from 'lucia'
 import mongoose from 'mongoose'
 
 const adapter = new MongodbAdapter(
+  // @ts-ignore
   mongoose.connection.collection('sessions'),
   mongoose.connection.collection('users'),
 )
